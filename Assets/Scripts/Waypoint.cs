@@ -19,4 +19,18 @@ public class Waypoint : MonoBehaviour
         east = e;
         west = w;
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.cyan;
+        if (north)
+            Gizmos.DrawLine(this.transform.position, north.transform.position);
+        if (south)
+            Gizmos.DrawLine(this.transform.position, south.transform.position);
+        if (east)
+            Gizmos.DrawLine(this.transform.position, east.transform.position);
+        if (west)
+            Gizmos.DrawLine(this.transform.position, west.transform.position);
+    }
+
 }

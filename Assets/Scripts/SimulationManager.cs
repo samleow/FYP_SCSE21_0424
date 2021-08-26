@@ -14,19 +14,26 @@ public class SimulationManager : Singleton<SimulationManager>
     public Tilemap tm;
     public GameObject waypointParent;
 
+    public const string WAYPOINT_TAG = "Waypoint";
+    public const string WALL_TAG = "Walls";
+
     private Vector3Int _fixedOrigin = new Vector3Int(-16, -17, 0);
     private Vector3Int _fixedSize = new Vector3Int(32, 33, 1);
+
+    private bool _waypointsGenerated = false;
 
     protected override void Awake()
     {
         base.Awake();
 
         _tileMatrix = new TileMatrix();
+        _waypointsGenerated = false;
     }
 
     // Need reduce checks somehow
     // For now brute force check for junctions
-    void PlotWaypoints()
+    // Plot waypoints onto a grid by checking for junctions
+    private void PlotWaypoints()
     {
         _tileMatrix.waypoints = new int[33, 32];
         for (int i = 0; i < 33; i++)
@@ -49,8 +56,8 @@ public class SimulationManager : Singleton<SimulationManager>
                             // W wall
                             if (j - 1 < 32 && _tileMatrix.walls[i, j - 1] == 1)
                             {
-                                // S in bounds
-                                if (i - 1 >= 0)
+                                // S clear
+                                if (i - 1 >= 0 && _tileMatrix.walls[i - 1, j] == 0)
                                 {
                                     _tileMatrix.waypoints[i, j] = 0;
                                 }
@@ -67,8 +74,8 @@ public class SimulationManager : Singleton<SimulationManager>
                             // W wall
                             if (j - 1 < 32 && _tileMatrix.walls[i, j - 1] == 1)
                             {
-                                // N in bounds
-                                if (i + 1 < 33)
+                                // N clear
+                                if (i + 1 < 33 && _tileMatrix.walls[i + 1, j] == 0)
                                 {
                                     _tileMatrix.waypoints[i, j] = 0;
                                 }
@@ -85,8 +92,8 @@ public class SimulationManager : Singleton<SimulationManager>
                             // S wall
                             if (i - 1 >= 0 && _tileMatrix.walls[i - 1, j] == 1)
                             {
-                                // W in bounds
-                                if (j - 1 >= 0)
+                                // W clear
+                                if (j - 1 >= 0 && _tileMatrix.walls[i, j - 1] == 0)
                                 {
                                     _tileMatrix.waypoints[i, j] = 0;
                                 }
@@ -103,8 +110,8 @@ public class SimulationManager : Singleton<SimulationManager>
                             // S wall
                             if (i - 1 >= 0 && _tileMatrix.walls[i - 1, j] == 1)
                             {
-                                // E in bounds
-                                if (j + 1 < 32)
+                                // E clear
+                                if (j + 1 < 32 && _tileMatrix.walls[i, j + 1] == 0)
                                 {
                                     _tileMatrix.waypoints[i, j] = 0;
                                 }
@@ -120,21 +127,29 @@ public class SimulationManager : Singleton<SimulationManager>
         }
     }
 
-    void CreateAWaypoint(int x, int y)
+    // Creates a waypoint gameobject with (x, y) grid coordinates
+    private void CreateAWaypoint(int x, int y)
     {
         GameObject wp = new GameObject();
-        wp.name = "waypoint";
-        // hardcoded tag?
-        wp.tag = "Waypoint";
+        wp.name = "waypoint " + x + " " + y;
+        wp.tag = WAYPOINT_TAG;
         wp.transform.SetParent(waypointParent.transform);
         wp.transform.localScale = new Vector3(1, 1, 1);
         wp.transform.localPosition = new Vector3(_fixedOrigin.x + x + 0.5f, _fixedOrigin.y + y + 0.5f, 0);
         wp.AddComponent<BoxCollider2D>();
         wp.GetComponent<BoxCollider2D>().isTrigger = true;
+        Waypoint wpComp = wp.AddComponent<Waypoint>();
+        wpComp.gridPos.Set(x,y);
     }
 
-    void GenerateWaypoints()
+    // Generates all waypoint gameobjects from the grid
+    private void GenerateWaypoints()
     {
+        if (_waypointsGenerated)
+            return;
+        else
+            _waypointsGenerated = true;
+
         for (int i = 0; i < 33; i++)
         {
             for (int j = 0; j < 32; j++)
@@ -144,6 +159,53 @@ public class SimulationManager : Singleton<SimulationManager>
                     CreateAWaypoint(j,i);
                 }
             }
+        }
+    }
+
+    // Link the waypoint gameobjects
+    // May have heavy processing due to multiple GetComponent calls in a loop
+    // Other colliders may affect waypoint linkings
+    // Eg. Player, ghosts, points pickup colliders
+    private void LinkWaypoints()
+    {
+        foreach (Transform wp_tf in waypointParent.transform)
+        {
+            RaycastHit2D[] result = new RaycastHit2D[1];
+            BoxCollider2D collider = wp_tf.GetComponent<BoxCollider2D>();
+            Waypoint wp_comp = wp_tf.GetComponent<Waypoint>();
+            // north/up
+            if (collider.Raycast(Vector2.up, result) > 0)
+            {
+                if (result[0].collider.tag.Equals(WAYPOINT_TAG))
+                {
+                    wp_comp.north = result[0].transform.GetComponent<Waypoint>();
+                }
+            }
+            // south/down
+            if (collider.Raycast(Vector2.down, result) > 0)
+            {
+                if (result[0].collider.tag.Equals(WAYPOINT_TAG))
+                {
+                    wp_comp.south = result[0].transform.GetComponent<Waypoint>();
+                }
+            }
+            // east/right
+            if (collider.Raycast(Vector2.right, result) > 0)
+            {
+                if (result[0].collider.tag.Equals(WAYPOINT_TAG))
+                {
+                    wp_comp.east = result[0].transform.GetComponent<Waypoint>();
+                }
+            }
+            // west/left
+            if (collider.Raycast(Vector2.left, result) > 0)
+            {
+                if (result[0].collider.tag.Equals(WAYPOINT_TAG))
+                {
+                    wp_comp.west = result[0].transform.GetComponent<Waypoint>();
+                }
+            }
+
         }
     }
 
@@ -163,7 +225,7 @@ public class SimulationManager : Singleton<SimulationManager>
         }
     }
 
-    // Testing on Erase button
+    // Testing on button click
     public void Debugger()
     {
 
@@ -202,5 +264,7 @@ public class SimulationManager : Singleton<SimulationManager>
         //DebugPrintGrid(_tileMatrix.waypoints);
 
         GenerateWaypoints();
+
+        LinkWaypoints();
     }
 }
