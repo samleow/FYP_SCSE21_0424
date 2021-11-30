@@ -46,3 +46,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Points
+    uniqueID: 3893097629
+    locked: 0
+  - name: Walls
+    uniqueID: 1179604827
+    locked: 0
+  - name: Player
+    uniqueID: 1267660315
+    locked: 0
+  - name: Ghosts
+    uniqueID: 3621901313
+    locked: 0

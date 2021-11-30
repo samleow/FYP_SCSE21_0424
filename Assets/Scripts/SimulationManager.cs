@@ -13,9 +13,13 @@ public class SimulationManager : Singleton<SimulationManager>
 
     public Tilemap tm;
     public GameObject waypointParent;
+    public GameObject charactersParent;
 
+    // Tags
     public const string WAYPOINT_TAG = "Waypoint";
     public const string WALL_TAG = "Walls";
+    public const string PLAYER_TAG = "Player";
+    public const string GHOST_TAG = "Ghost";
 
     private Vector3Int _fixedOrigin = new Vector3Int(-16, -17, 0);
     private Vector3Int _fixedSize = new Vector3Int(32, 33, 1);
@@ -162,12 +166,31 @@ public class SimulationManager : Singleton<SimulationManager>
         }
     }
 
+    // Disables all colliders on characters
+    private void DisableCharacterColliders()
+    {
+        foreach (BoxCollider2D c2d in charactersParent.GetComponentsInChildren<BoxCollider2D>())
+        {
+            c2d.enabled = false;
+        }
+    }
+
+    // Enables all colliders on characters
+    private void EnableCharacterColliders()
+    {
+        foreach (BoxCollider2D c2d in charactersParent.GetComponentsInChildren<BoxCollider2D>())
+        {
+            c2d.enabled = true;
+        }
+    }
+
     // Link the waypoint gameobjects
     // May have heavy processing due to multiple GetComponent calls in a loop
-    // Other colliders may affect waypoint linkings
-    // Eg. Player, ghosts, points pickup colliders
     private void LinkWaypoints()
     {
+        // disables all other colliders before raycast linking
+        DisableCharacterColliders();
+
         foreach (Transform wp_tf in waypointParent.transform)
         {
             RaycastHit2D[] result = new RaycastHit2D[1];
@@ -207,6 +230,9 @@ public class SimulationManager : Singleton<SimulationManager>
             }
 
         }
+
+        // re-enables all other colliders before raycast linking
+        EnableCharacterColliders();
     }
 
     // Prints out grid
