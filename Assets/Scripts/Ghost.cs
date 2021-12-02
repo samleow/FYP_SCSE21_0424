@@ -7,8 +7,6 @@ public class Ghost : Character
     // should check with player's current WP instead of players actual position
     private GameObject _player;
 
-    private float _speed = 2;
-
     private Waypoint _targetWP = null;
 
     // temporary variable to test pathfinding
@@ -32,27 +30,29 @@ public class Ghost : Character
                 return;
             }
 
+            // if no current waypoint set
+            // e.g. ghost spawned in between 2 waypoints
+            if (!_currWP)
+            {
+                int layermask = ~(LayerMask.GetMask("Ghost"));
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(GetTargetDirection(_player.transform).x, 0), Mathf.Infinity, layermask);
+                if (hit.collider && hit.collider.CompareTag(SimulationManager.WAYPOINT_TAG))
+                    _targetWP = hit.transform.GetComponent<Waypoint>();
+                else
+                {
+                    hit = Physics2D.Raycast(transform.position, new Vector2(0,GetTargetDirection(_player.transform).y), Mathf.Infinity, layermask);
+                    if (hit.collider && hit.collider.CompareTag(SimulationManager.WAYPOINT_TAG))
+                        _targetWP = hit.transform.GetComponent<Waypoint>();
+                }
+            }
+
+            // if no initial target waypoint, move towards current waypoint
             if (!_targetWP)
                 _targetWP = _currWP;
 
             if (MoveTo(_targetWP.transform))
-            {
                 SetTargetWP();
-            }
         }
-    }
-
-    private bool MoveTo(Transform target)
-    {
-        float step = _speed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, target.position, step);
-
-        if (Vector3.Distance(transform.position, target.position) < 0.001f)
-        {
-            transform.position = target.position;
-            return true;
-        }
-        return false;
     }
 
     private void SetTargetWP()
@@ -60,7 +60,7 @@ public class Ghost : Character
         if (!_currWP)
             _targetWP = null;
 
-        Vector2 dir = GetDirection(_player.transform);
+        Vector2 dir = GetTargetDirection(_player.transform);
 
         if (dir.x < 0)
         {
@@ -83,17 +83,9 @@ public class Ghost : Character
             if (_currWP.north)
                 _targetWP = _currWP.north;
         }
-
-
-        // testing wp linkage access
-        //if (_targetWP = _currWP.south) { }
-        //else if (_targetWP = _currWP.east) { }
-        //else if (_targetWP = _currWP.west) { }
-        //else if (_targetWP = _currWP.north) { }
-
     }
 
-    private Vector2 GetDirection(Transform target)
+    private Vector2 GetTargetDirection(Transform target)
     {
         return target.position - transform.position;
     }

@@ -3071,7 +3071,7 @@ GameObject:
   - component: {fileID: 418905691}
   - component: {fileID: 418905692}
   - component: {fileID: 418905693}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: cyan
   m_TagString: Ghost
   m_Icon: {fileID: 0}
@@ -18812,7 +18812,7 @@ GameObject:
   - component: {fileID: 1418056142}
   - component: {fileID: 1418056144}
   - component: {fileID: 1418056143}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: red
   m_TagString: Ghost
   m_Icon: {fileID: 0}
@@ -18827,7 +18827,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1418056139}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 12.5, z: 0}
+  m_LocalPosition: {x: 5.5, y: 9.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 804903343}
@@ -19281,7 +19281,7 @@ GameObject:
   - component: {fileID: 1566620270}
   - component: {fileID: 1566620271}
   - component: {fileID: 1566620272}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: orange
   m_TagString: Ghost
   m_Icon: {fileID: 0}
@@ -19593,7 +19593,9 @@ GameObject:
   - component: {fileID: 1659935549}
   - component: {fileID: 1659935550}
   - component: {fileID: 1659935551}
-  m_Layer: 0
+  - component: {fileID: 1659935552}
+  - component: {fileID: 1659935553}
+  m_Layer: 8
   m_Name: pacman
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -19714,6 +19716,114 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1659935552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659935547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1beb62ac7699cc45ade3fb63d4c8bf0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 
+--- !u!114 &1659935553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659935547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 7fd8784962e69e14e9cd98fa9bb94b6d,
+    type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1659935552}
+        m_TargetAssemblyTypeName: PlayerHandler, Assembly-CSharp
+        m_MethodName: Move
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 6f2a06e0-93dc-493d-b6f5-5ec61ee92895
+    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 71db7ebb-2182-45c7-a895-94fbdb7e4827
+    m_ActionName: Player/Look[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e147c4b8-a9bd-4795-b365-da070484ea8a
+    m_ActionName: Player/Fire[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9b1395bf-4dd7-42b4-b719-5850bb8b48d5
+    m_ActionName: UI/Navigate[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6f1176de-151c-4230-9655-79387b554976
+    m_ActionName: UI/Submit[/Keyboard/enter]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c180873f-6a94-4e35-8b11-1dcc18a2cb74
+    m_ActionName: UI/Cancel[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 80df916a-859d-4f99-a025-e931e2fb961b
+    m_ActionName: UI/Point[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: afc989dd-8de8-4f56-915f-6b327eb3a615
+    m_ActionName: UI/Click[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7fae0427-34d0-4ce1-8cfa-5b38222cdb7a
+    m_ActionName: UI/ScrollWheel[/Mouse/scroll]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 77113a94-0c90-4936-ac1e-e57be099f2a2
+    m_ActionName: UI/MiddleClick[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5ebc5451-0709-4ca4-8907-c657c616696f
+    m_ActionName: UI/RightClick[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 544adef0-9139-4f9a-b8f9-c54535b1a496
+    m_ActionName: UI/TrackedDevicePosition
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a1a6790d-8eac-4585-942c-3462a432bcac
+    m_ActionName: UI/TrackedDeviceOrientation
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: Keyboard&Mouse
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1680544649
 GameObject:
   m_ObjectHideFlags: 0
@@ -19801,7 +19911,7 @@ GameObject:
   - component: {fileID: 1704382660}
   - component: {fileID: 1704382661}
   - component: {fileID: 1704382662}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: pink
   m_TagString: Ghost
   m_Icon: {fileID: 0}
