@@ -33,4 +33,18 @@ public class Waypoint : MonoBehaviour
             Gizmos.DrawLine(this.transform.position, west.transform.position);
     }
 
+    public Character.Direction ?GetWaypointDirection(Waypoint wp)
+    {
+        if (wp == north)
+            return Character.Direction.UP;
+        else if (wp == south)
+            return Character.Direction.DOWN;
+        else if (wp == east)
+            return Character.Direction.RIGHT;
+        else if (wp == west)
+            return Character.Direction.LEFT;
+        else
+            return null;
+    }
+
 }

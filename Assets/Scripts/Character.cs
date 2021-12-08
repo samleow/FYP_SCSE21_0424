@@ -47,16 +47,26 @@ public class Character : MonoBehaviour
         };
     }
 
-    protected void SetDirectionByVector(Vector2 dir)
+    public Direction ?GetDirection(Vector2 dir)
     {
         if (dir.x >= 1)
-            _dir = Direction.RIGHT;
+            return Direction.RIGHT;
         else if (dir.x <= -1)
-            _dir = Direction.LEFT;
+            return Direction.LEFT;
         else if (dir.y >= 1)
-            _dir = Direction.UP;
+            return Direction.UP;
         else if (dir.y <= -1)
-            _dir = Direction.DOWN;
+            return Direction.DOWN;
+        else
+            return null;
+    }
+
+    protected void SetDirectionByVector(Vector2 dir)
+    {
+        if (GetDirection(dir) != null)
+            _dir = (Direction)GetDirection(dir);
+        else
+            _dir = 0;
     }
 
     protected bool MoveTo(Transform target)

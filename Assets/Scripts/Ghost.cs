@@ -34,7 +34,7 @@ public class Ghost : Character
             // e.g. ghost spawned in between 2 waypoints
             if (!_currWP)
             {
-                int layermask = ~(LayerMask.GetMask("Ghost"));
+                int layermask = ~(LayerMask.GetMask("Ghost", "Player"));
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(GetTargetDirection(_player.transform).x, 0), Mathf.Infinity, layermask);
                 if (hit.collider && hit.collider.CompareTag(SimulationManager.WAYPOINT_TAG))
                     _targetWP = hit.transform.GetComponent<Waypoint>();
