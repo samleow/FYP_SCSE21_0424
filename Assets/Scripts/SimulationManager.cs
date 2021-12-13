@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static Global;
 
 public class SimulationManager : Singleton<SimulationManager>
 {
@@ -201,7 +202,10 @@ public class SimulationManager : Singleton<SimulationManager>
             {
                 if (result[0].collider.tag.Equals(WAYPOINT_TAG))
                 {
-                    wp_comp.north = result[0].transform.GetComponent<Waypoint>();
+                    if (wp_comp.branches.ContainsKey(Direction.UP))
+                        wp_comp.branches[Direction.UP] = result[0].transform.GetComponent<Waypoint>();
+                    else
+                        wp_comp.branches.Add(Direction.UP, result[0].transform.GetComponent<Waypoint>());
                 }
             }
             // south/down
@@ -209,7 +213,10 @@ public class SimulationManager : Singleton<SimulationManager>
             {
                 if (result[0].collider.tag.Equals(WAYPOINT_TAG))
                 {
-                    wp_comp.south = result[0].transform.GetComponent<Waypoint>();
+                    if(wp_comp.branches.ContainsKey(Direction.DOWN))
+                        wp_comp.branches[Direction.DOWN] = result[0].transform.GetComponent<Waypoint>();
+                    else
+                        wp_comp.branches.Add(Direction.DOWN, result[0].transform.GetComponent<Waypoint>());
                 }
             }
             // east/right
@@ -217,7 +224,10 @@ public class SimulationManager : Singleton<SimulationManager>
             {
                 if (result[0].collider.tag.Equals(WAYPOINT_TAG))
                 {
-                    wp_comp.east = result[0].transform.GetComponent<Waypoint>();
+                    if(wp_comp.branches.ContainsKey(Direction.RIGHT))
+                        wp_comp.branches[Direction.RIGHT] = result[0].transform.GetComponent<Waypoint>();
+                    else
+                        wp_comp.branches.Add(Direction.RIGHT, result[0].transform.GetComponent<Waypoint>());
                 }
             }
             // west/left
@@ -225,7 +235,10 @@ public class SimulationManager : Singleton<SimulationManager>
             {
                 if (result[0].collider.tag.Equals(WAYPOINT_TAG))
                 {
-                    wp_comp.west = result[0].transform.GetComponent<Waypoint>();
+                    if(wp_comp.branches.ContainsKey(Direction.LEFT))
+                        wp_comp.branches[Direction.LEFT] = result[0].transform.GetComponent<Waypoint>();
+                    else
+                        wp_comp.branches.Add(Direction.LEFT, result[0].transform.GetComponent<Waypoint>());
                 }
             }
 

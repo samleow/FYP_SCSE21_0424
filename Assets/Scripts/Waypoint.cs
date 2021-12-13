@@ -1,50 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Global;
 
 public class Waypoint : MonoBehaviour
 {
     public Vector2Int gridPos;
 
-    public Waypoint north, south, east, west;
+    //public Waypoint north, south, east, west;
 
-    public Waypoint(Vector2Int gridPos, Waypoint n = null, Waypoint s = null, Waypoint e = null, Waypoint w = null)
+    public Dictionary<Direction, Waypoint> branches = new Dictionary<Direction, Waypoint>();
+
+    public Waypoint()
     {
-        if (gridPos != null)
-            this.gridPos = gridPos;
-        else
-            this.gridPos = new Vector2Int();
-        north = n;
-        south = s;
-        east = e;
-        west = w;
+        this.gridPos = new Vector2Int();
+        if (branches == null)
+            branches = new Dictionary<Direction, Waypoint>();
     }
-
+    
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
-        if (north)
-            Gizmos.DrawLine(this.transform.position, north.transform.position);
-        if (south)
-            Gizmos.DrawLine(this.transform.position, south.transform.position);
-        if (east)
-            Gizmos.DrawLine(this.transform.position, east.transform.position);
-        if (west)
-            Gizmos.DrawLine(this.transform.position, west.transform.position);
+
+        foreach (var branch in branches)
+        {
+            if (!branch.Value)
+                continue;
+
+            Gizmos.DrawLine(this.transform.position, branch.Value.transform.position);
+        }
+
     }
 
-    public Character.Direction ?GetWaypointDirection(Waypoint wp)
+    public Direction ?GetWaypointDirection(Waypoint wp)
     {
-        if (wp == north)
-            return Character.Direction.UP;
-        else if (wp == south)
-            return Character.Direction.DOWN;
-        else if (wp == east)
-            return Character.Direction.RIGHT;
-        else if (wp == west)
-            return Character.Direction.LEFT;
-        else
-            return null;
+        if (branches.ContainsValue(wp))
+        {
+            foreach (var branch in branches)
+            {
+                if (branch.Value.Equals(wp))
+                {
+                    return branch.Key;
+                }
+            }
+        }
+        return null;
     }
 
 }

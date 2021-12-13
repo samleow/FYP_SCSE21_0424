@@ -10,7 +10,7 @@ public enum TileType : int
     ERASE
 }
 
-public class EditorButtonHandler : MonoBehaviour
+public class EditorButtonHandler : MenuButtonHandler
 {
     private TileType _selectedTile = TileType.NONE;
 

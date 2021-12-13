@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Global;
 
 public class Ghost : Character
 {
@@ -58,30 +59,33 @@ public class Ghost : Character
     private void SetTargetWP()
     {
         if (!_currWP)
+        {
             _targetWP = null;
+            return;
+        }
 
         Vector2 dir = GetTargetDirection(_player.transform);
 
         if (dir.x < 0)
         {
-            if (_currWP.west)
-                _targetWP = _currWP.west;
+            if(_currWP.branches.ContainsKey(Direction.LEFT))
+                _targetWP = _currWP.branches[Direction.LEFT];
         }
         else if (dir.x > 0)
         {
-            if (_currWP.east)
-                _targetWP = _currWP.east;
+            if (_currWP.branches.ContainsKey(Direction.RIGHT))
+                _targetWP = _currWP.branches[Direction.RIGHT];
         }
 
         if (dir.y < 0)
         {
-            if (_currWP.south)
-                _targetWP = _currWP.south;
+            if (_currWP.branches.ContainsKey(Direction.DOWN))
+                _targetWP = _currWP.branches[Direction.DOWN];
         }
         else if (dir.y > 0)
         {
-            if (_currWP.north)
-                _targetWP = _currWP.north;
+            if (_currWP.branches.ContainsKey(Direction.UP))
+                _targetWP = _currWP.branches[Direction.UP];
         }
     }
 

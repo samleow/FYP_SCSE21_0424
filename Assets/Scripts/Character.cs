@@ -1,17 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Global;
 
 public class Character : MonoBehaviour
 {
 
-    public enum Direction
-    {
-        RIGHT,
-        LEFT,
-        UP,
-        DOWN
-    }
     protected Direction _dir = Direction.RIGHT;
 
     protected BoxCollider2D _collider;

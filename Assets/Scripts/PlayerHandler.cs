@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static Global;
 
 public class PlayerHandler : Character
 {
@@ -76,23 +77,11 @@ public class PlayerHandler : Character
                 return false;
 
             // add queueing here
-            switch (GetDirection(dir))
-            {
-                case Direction.RIGHT:
-                    _queuedWP = _targetWP.east ? _targetWP.east : null;
-                    break;
-                case Direction.LEFT:
-                    _queuedWP = _targetWP.west ? _targetWP.west : null;
-                    break;
-                case Direction.UP:
-                    _queuedWP = _targetWP.north ? _targetWP.north : null;
-                    break;
-                case Direction.DOWN:
-                    _queuedWP = _targetWP.south ? _targetWP.south : null;
-                    break;
-                default:
-                    break;
-            }
+            if (_targetWP.branches.ContainsKey((Direction)GetDirection(dir)))
+                _queuedWP = _targetWP.branches[(Direction)GetDirection(dir)];
+            else
+                _queuedWP = null;
+
             return false;
         }
         return true;

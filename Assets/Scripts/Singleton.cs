@@ -46,7 +46,16 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
         }
         else if (instance != this as T)
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
+
+            // replace old instance with this
+            // fixes deletion of references from unity engine, but
+            // may overwrite old instance variables with initial values !!!
+            Destroy(instance.gameObject);
+            instance = this as T;
+            if (DontDestroy)
+                DontDestroyOnLoad(gameObject);
+
         }
         else if (DontDestroy)
         {
