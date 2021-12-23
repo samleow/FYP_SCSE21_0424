@@ -10,7 +10,7 @@ public class Character : MonoBehaviour
 
     protected BoxCollider2D _collider;
 
-    protected Waypoint _currWP = null;
+    public Waypoint _currWP = null;
 
     protected float _speed = 2;
 
@@ -65,6 +65,9 @@ public class Character : MonoBehaviour
 
     protected bool MoveTo(Transform target)
     {
+        if (target == null)
+            return false;
+
         float step = _speed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, target.position, step);
 

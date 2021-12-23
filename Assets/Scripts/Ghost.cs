@@ -7,8 +7,11 @@ public class Ghost : Character
 {
     // should check with player's current WP instead of players actual position
     private GameObject _player;
+    private PlayerHandler _playerH = null;
 
     private Waypoint _targetWP = null;
+
+    private Pathfinding _pathfinding;
 
     // temporary variable to test pathfinding
     // will change to proper fsm structure in the future
@@ -17,6 +20,8 @@ public class Ghost : Character
     void Start()
     {
         _player = GameObject.FindGameObjectWithTag(SimulationManager.PLAYER_TAG);
+        _playerH = _player.GetComponent<PlayerHandler>();
+        _pathfinding = new Pathfinding();
         state = "IDLE";
     }
 
@@ -57,6 +62,30 @@ public class Ghost : Character
     }
 
     private void SetTargetWP()
+    {
+        if (!_currWP)
+        {
+            _targetWP = null;
+            return;
+        }
+
+        _pathfinding.SetCurrWP(_currWP);
+        if (_playerH._currWP == null)
+        {
+            // TODO: FIXME Fix player's current waypoint !
+            Debug.LogError("\tPlayer's currWP is NULL !!");
+            return;
+        }
+        _pathfinding.SetTargetWP(_playerH._currWP);
+        Stack<Direction> _steps = _pathfinding.GetSteps();
+
+        if(_steps != null)
+            _targetWP = _currWP.branches[_steps.Pop()];
+    }
+
+    // For prototype test
+    // Will be replaced with A* pathfinding
+    private void OldSetTargetWP()
     {
         if (!_currWP)
         {
