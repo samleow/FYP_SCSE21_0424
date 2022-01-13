@@ -5,7 +5,7 @@ using static Global;
 
 public class Pathfinding
 {
-    protected class Node
+    public class Node
     {
         public Waypoint waypoint;
         public float f;
@@ -32,6 +32,9 @@ public class Pathfinding
     // DEBUGGING
     public Character player;
     public Character ghost;
+
+    // for display
+    public Node path = null;
 
     public Pathfinding(Waypoint currWP = null, Waypoint targetWP = null)
     {
@@ -79,6 +82,8 @@ public class Pathfinding
 
             if (current.waypoint.Equals(targetWP))
             {
+                path = current;
+
                 // construct path and return steps
                 while (current.parent != null)
                 {

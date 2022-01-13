@@ -33,6 +33,7 @@ public class Ghost : Character
             if (_collider.IsTouching(_player.GetComponent<Collider2D>()))
             {
                 state = "WIN";
+                Debug.Log("Ghost " + this.name + " win!");
                 return;
             }
 
@@ -72,15 +73,22 @@ public class Ghost : Character
         _pathfinding.SetCurrWP(_currWP);
         if (_playerH._currWP == null)
         {
-            // TODO: FIXME Fix player's current waypoint !
-            Debug.LogError("\tPlayer's currWP is NULL !!");
-            return;
+            // target wp right in front of player instead
+            _pathfinding.SetTargetWP(_playerH.GetTargetWP());
         }
-        _pathfinding.SetTargetWP(_playerH._currWP);
+        else
+            _pathfinding.SetTargetWP(_playerH._currWP);
+
         Stack<Direction> _steps = _pathfinding.GetSteps();
 
-        if(_steps != null)
-            _targetWP = _currWP.branches[_steps.Pop()];
+        if (_steps != null)
+        {
+            // target wp right in front of player instead
+            if (_steps.Count == 0)
+                _targetWP = _playerH.GetTargetWP();
+            else
+                _targetWP = _currWP.branches[_steps.Pop()];
+        }
     }
 
     // For prototype test
@@ -121,5 +129,23 @@ public class Ghost : Character
     private Vector2 GetTargetDirection(Transform target)
     {
         return target.position - transform.position;
+    }
+
+    // debug render the ghost pathfinding path
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+
+        if (_pathfinding == null || _pathfinding.path == null)
+            return;
+        Pathfinding.Node path = _pathfinding.path;
+
+        while (path.parent != null)
+        {
+            Gizmos.DrawLine(path.parent.waypoint.transform.position, path.waypoint.transform.position);
+            path = path.parent;
+        }
+
+        Gizmos.DrawLine(this.transform.position, path.waypoint.transform.position);
     }
 }

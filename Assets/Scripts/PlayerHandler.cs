@@ -40,8 +40,14 @@ public class PlayerHandler : Character
             {
                 if (_queuedWP)
                 {
-                    _dir = (Direction)_targetWP.GetWaypointDirection(_queuedWP);
-                    TurnPlayer(GetDirectionVector());
+                    // TODO: Fix nullable object must have a value error
+                    if (_targetWP.GetWaypointDirection(_queuedWP) != null)
+                    {
+                        _dir = (Direction)_targetWP.GetWaypointDirection(_queuedWP);
+                        TurnPlayer(GetDirectionVector());
+                    }
+                    else
+                        Debug.Log("\tERROR: Queued Waypoint " + _queuedWP.name + "'s directionnot found !!");
                 }
                 _targetWP = _queuedWP;
                 _queuedWP = null;
@@ -59,7 +65,6 @@ public class PlayerHandler : Character
         SetTargetWP(dir);
     }
 
-    // can add queueing of next waypoint in here
     private bool SetTargetWP(Vector2 dir)
     {
         int layermask = ~(LayerMask.GetMask("Player", "Ghost"));
@@ -76,7 +81,7 @@ public class PlayerHandler : Character
             if (!_targetWP)
                 return false;
 
-            // add queueing here
+            // queueing here
             if (_targetWP.branches.ContainsKey((Direction)GetDirection(dir)))
                 _queuedWP = _targetWP.branches[(Direction)GetDirection(dir)];
             else
@@ -109,6 +114,11 @@ public class PlayerHandler : Character
             _spriteRenderer.flipX = false;
             transform.localRotation = Quaternion.Euler(0, 0, -90);
         }
+    }
+
+    public Waypoint GetTargetWP()
+    {
+        return _targetWP;
     }
 
 }

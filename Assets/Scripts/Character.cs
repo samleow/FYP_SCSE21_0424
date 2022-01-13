@@ -23,9 +23,9 @@ public class Character : MonoBehaviour
 
     protected void OnTriggerEnter2D(Collider2D col)
     {
-        if (_currWP = col.GetComponent<Waypoint>())
+        if (col.GetComponent<Waypoint>() != null)
         {
-            //Debug.Log(this.name + " entered WP - " + _currWP.name);
+            _currWP = col.GetComponent<Waypoint>();
         }
     }
 
